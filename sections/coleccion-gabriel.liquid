@@ -1,0 +1,122 @@
+{% schema %}
+{
+  "name": "Colec personalizadas",
+  "settings": [
+    {
+      "type": "collection_list",
+      "id": "collections",
+      "label": "Colecciones",
+      "limit": 50
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Colecciones por fila",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_title",
+      "label": "Mostrar título de la colección",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Colecciones personalizadas",
+      "category": "Colección"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-collections-grid">
+  {% if section.settings.collections != blank %}
+    <div class="collection-grid" style="grid-template-columns: repeat({{ section.settings.columns }}, 1fr);">
+      {% for collection in section.settings.collections %}
+        <div class="collection-item" data-url="{{ collection.url }}">
+          <div class="collection-link">
+            <div class="collection-image">
+              {% if collection.image != blank %}
+                {{ collection.image | image_url: width: 300 | image_tag: loading: 'lazy', alt: collection.title, class: 'collection-img' }}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg collection-img' }}
+              {% endif %}
+            </div>
+            {% if section.settings.show_collection_title %}
+              <h3 class="collection-title">{{ collection.title }}</h3>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No se han seleccionado colecciones.</p>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+.custom-collections-grid {
+  margin: 20px 0;
+  background-color: transparent;
+}
+
+.collection-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.collection-item {
+  text-align: center;
+  cursor: pointer;
+}
+
+.collection-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.collection-link:hover {
+  opacity: 0.8;
+}
+
+.collection-image {
+  width: 100%;
+  padding-top: 100%; /* Aspect ratio 1:1 */
+  position: relative;
+  overflow: hidden;
+}
+
+.collection-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.collection-title {
+  margin-top: 10px;
+  font-weight: normal;
+}
+{% endstylesheet %}
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', function() {
+  var collectionItems = document.querySelectorAll('.collection-item');
+  collectionItems.forEach(function(item) {
+    item.addEventListener('click', function() {
+      var url = this.getAttribute('data-url');
+      if (url) {
+        window.location.href = url;
+      }
+    });
+  });
+});
+{% endjavascript %}

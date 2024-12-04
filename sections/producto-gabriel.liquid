@@ -1,0 +1,149 @@
+{% comment %}
+  Sección principal del producto
+{% endcomment %}
+
+<div class="container mx-auto px-4 py-8" data-section-id="{{ section.id }}" data-section-type="product-template">
+  <div class="flex flex-col md:flex-row gap-8">
+    <div class="md:w-1/2">
+      {% if product.featured_media != blank %}
+        <div class="product-image-container" data-image-zoom-enable="{{ section.settings.product_zoom_enable }}">
+          {{ product.featured_media | image_url: width: 1000 | image_tag: 
+            class: "w-full h-auto rounded-lg shadow-lg",
+            alt: product.featured_media.alt | escape
+          }}
+        </div>
+      {% endif %}
+    </div>
+    <div class="md:w-1/2">
+      <h1 class="text-3xl font-bold mb-4">{{ product.title }}</h1>
+      <p class="text-2xl font-semibold mb-4" id="product-price" data-price>
+        {{ product.selected_or_first_available_variant.price | money }}
+      </p>
+      <div class="mb-4">
+        <span class="inline-block {% if product.available %}bg-green-500{% else %}bg-red-500{% endif %} text-white px-2 py-1 rounded-full text-sm">
+          {% if product.available %}En stock{% else %}Agotado{% endif %}
+        </span>
+      </div>
+      {% form 'product', product, data-product-form: '' %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        
+        <div class="mb-4">
+          <label for="Quantity" class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+          <input
+            type="number"
+            id="Quantity"
+            name="quantity"
+            value="1"
+            min="1"
+            class="w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            data-quantity-input
+          >
+        </div>
+        
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            <div class="mb-4" data-product-option-wrapper>
+              <label for="Option{{ option.position }}" class="block text-sm font-medium text-gray-700 mb-1">
+                {{ option.name }}
+              </label>
+              <select
+                id="Option{{ option.position }}"
+                name="options[{{ option.name | escape }}]"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                data-product-option
+              >
+                {% for value in option.values %}
+                  <option value="{{ value | escape }}" {% if option.selected_value == value %}selected="selected"{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% endfor %}
+        {% endunless %}
+        
+        <div class="flex items-center mb-4 text-green-600">
+          {% render 'icon-truck' %}
+          <span class="ml-2">Envío gratis en pedidos superiores a {{ section.settings.free_shipping_threshold | money }}</span>
+        </div>
+        
+        <div class="flex space-x-4 mb-6">
+          <button type="submit" name="add" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300 flex items-center justify-center{% unless product.available %} opacity-50 cursor-not-allowed{% endunless %}" {% unless product.available %}disabled{% endunless %}>
+            {% render 'icon-cart' %}
+            <span class="ml-2">{% if product.available %}Añadir al carrito{% else %}Agotado{% endif %}</span>
+          </button>
+          <button type="button" class="bg-gray-200 text-gray-800 px-4 py-3 rounded-md hover:bg-gray-300 transition duration-300">
+            {% render 'icon-heart' %}
+          </button>
+        </div>
+      {% endform %}
+      
+      <div class="prose max-w-none">
+        <h2 class="text-xl font-semibold mb-2">Descripción</h2>
+        <div>{{ product.description }}</div>
+      </div>
+    </div>
+  </div>
+  
+  {% if section.settings.show_related_products %}
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold mb-6">Productos relacionados</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% assign related_products = section.settings.related_collection.products | where: "id", "!=" | limit: 4 %}
+        {% for related_product in related_products %}
+          <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            {% if related_product.featured_media != blank %}
+              {{ related_product.featured_media | image_url: width: 300 | image_tag: 
+                class: "w-full h-48 object-cover",
+                alt: related_product.featured_media.alt | escape
+              }}
+            {% endif %}
+            <div class="p-4">
+              <h3 class="text-lg font-semibold mb-2">{{ related_product.title }}</h3>
+              <p class="text-gray-600">{{ related_product.price | money }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Product information",
+  "tag": "section",
+  "class": "product-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "product_zoom_enable",
+      "label": "Enable image zoom",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping threshold",
+      "default": "50.00"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related_products",
+      "label": "Show related products",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Related products collection"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Product information"
+    }
+  ]
+}
+{% endschema %}

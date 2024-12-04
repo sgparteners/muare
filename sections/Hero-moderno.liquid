@@ -1,0 +1,771 @@
+{% schema %}
+{
+  "name": "Hero Moderno",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Diseño General"
+    },
+    {
+      "type": "select",
+      "id": "modo_visualizacion",
+      "label": "Modo de visualización",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal (debajo del menú)"
+        },
+        {
+          "value": "fullscreen",
+          "label": "Pantalla completa"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "altura_desktop",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Altura del hero (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "altura_mobile",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Altura del hero (Mobile)",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_1",
+      "label": "Imagen 1 (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_1_mobile",
+      "label": "Imagen 1 (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "titulo_1",
+      "label": "Título 1"
+    },
+    {
+      "type": "richtext",
+      "id": "texto_1",
+      "label": "Texto 1"
+    },
+    {
+      "type": "url",
+      "id": "boton_url_1",
+      "label": "URL Botón 1"
+    },
+    {
+      "type": "text",
+      "id": "boton_texto_1",
+      "label": "Texto Botón 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_2",
+      "label": "Imagen 2 (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_2_mobile",
+      "label": "Imagen 2 (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "titulo_2",
+      "label": "Título 2"
+    },
+    {
+      "type": "richtext",
+      "id": "texto_2",
+      "label": "Texto 2"
+    },
+    {
+      "type": "url",
+      "id": "boton_url_2",
+      "label": "URL Botón 2"
+    },
+    {
+      "type": "text",
+      "id": "boton_texto_2",
+      "label": "Texto Botón 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_3",
+      "label": "Imagen 3 (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_3_mobile",
+      "label": "Imagen 3 (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "titulo_3",
+      "label": "Título 3"
+    },
+    {
+      "type": "richtext",
+      "id": "texto_3",
+      "label": "Texto 3"
+    },
+    {
+      "type": "url",
+      "id": "boton_url_3",
+      "label": "URL Botón 3"
+    },
+    {
+      "type": "text",
+      "id": "boton_texto_3",
+      "label": "Texto Botón 3"
+    },
+    {
+      "type": "header",
+      "content": "Estilos Desktop"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_horizontal",
+      "label": "Alineación horizontal del contenido",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_vertical",
+      "label": "Alineación vertical del contenido",
+      "options": [
+        {
+          "value": "top",
+          "label": "Arriba"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "bottom",
+          "label": "Abajo"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Estilos Mobile"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_horizontal_mobile",
+      "label": "Alineación horizontal del contenido (Mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_vertical_mobile",
+      "label": "Alineación vertical del contenido (Mobile)",
+      "options": [
+        {
+          "value": "top",
+          "label": "Arriba"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "bottom",
+          "label": "Abajo"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Configuración"
+    },
+    {
+      "type": "range",
+      "id": "intervalo",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "seg",
+      "label": "Intervalo entre slides",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "mostrar_indicadores",
+      "label": "Mostrar indicadores",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "efecto_transicion",
+      "label": "Efecto de transición",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Desvanecer"
+        },
+        {
+          "value": "slide",
+          "label": "Deslizar"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "color",
+      "id": "color_texto",
+      "label": "Color del texto",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_boton",
+      "label": "Color del botón",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_fondo_boton",
+      "label": "Color de fondo del botón",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Moderno",
+      "category": "Imagen"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="hero-moderno {% if section.settings.modo_visualizacion == 'fullscreen' %}hero-fullscreen{% endif %}" 
+     style="--altura-desktop: {{ section.settings.altura_desktop }}vh; --altura-mobile: {{ section.settings.altura_mobile }}vh;"
+     data-align-h="{{ section.settings.alineacion_horizontal }}"
+     data-align-v="{{ section.settings.alineacion_vertical }}"
+     data-align-h-mobile="{{ section.settings.alineacion_horizontal_mobile }}"
+     data-align-v-mobile="{{ section.settings.alineacion_vertical_mobile }}">
+  <div class="hero-contenedor {% if section.settings.efecto_transicion == 'slide' %}tipo-slide{% endif %}">
+    {% for i in (1..3) %}
+      {%- capture imagen_key -%}imagen_{{ i }}{%- endcapture -%}
+      {%- capture imagen_mobile_key -%}imagen_{{ i }}_mobile{%- endcapture -%}
+      {%- capture titulo_key -%}titulo_{{ i }}{%- endcapture -%}
+      {%- capture texto_key -%}texto_{{ i }}{%- endcapture -%}
+      {%- capture boton_url_key -%}boton_url_{{ i }}{%- endcapture -%}
+      {%- capture boton_texto_key -%}boton_texto_{{ i }}{%- endcapture -%}
+      
+      {%- assign imagen = section.settings[imagen_key] -%}
+      {%- assign imagen_mobile = section.settings[imagen_mobile_key] -%}
+      {%- assign titulo = section.settings[titulo_key] -%}
+      {%- assign texto = section.settings[texto_key] -%}
+      {%- assign boton_url = section.settings[boton_url_key] -%}
+      {%- assign boton_texto = section.settings[boton_texto_key] -%}
+      
+      {% if imagen != blank %}
+        <div class="hero-slide {% if forloop.first %}activo{% endif %}">
+          <div class="hero-imagen-container">
+            {% if imagen != blank %}
+              <img 
+                src="{{ imagen | img_url: '100x' }}"
+                data-src="{{ imagen | img_url: '2000x' }}"
+                alt="{{ imagen.alt | escape }}"
+                class="hero-imagen desktop-imagen lazyload"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                width="{{ imagen.width }}"
+                height="{{ imagen.height }}"
+              >
+            {% endif %}
+            {% if imagen_mobile != blank %}
+              <img 
+                src="{{ imagen_mobile | img_url: '100x' }}"
+                data-src="{{ imagen_mobile | img_url: '1000x' }}"
+                alt="{{ imagen_mobile.alt | escape }}"
+                class="hero-imagen mobile-imagen lazyload"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                width="{{ imagen_mobile.width }}"
+                height="{{ imagen_mobile.height }}"
+              >
+            {% elsif imagen != blank %}
+              <img 
+                src="{{ imagen | img_url: '100x' }}"
+                data-src="{{ imagen | img_url: '1000x' }}"
+                alt="{{ imagen.alt | escape }}"
+                class="hero-imagen mobile-imagen lazyload"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                width="{{ imagen.width }}"
+                height="{{ imagen.height }}"
+              >
+            {% endif %}
+          </div>
+          {% if titulo != blank or texto != blank or boton_texto != blank %}
+            <div class="hero-contenido">
+              {% if titulo != blank %}
+                <h2 class="hero-titulo" style="color: {{ section.settings.color_texto }}">{{ titulo }}</h2>
+              {% endif %}
+              
+              {% if texto != blank %}
+                <div class="hero-texto" style="color: {{ section.settings.color_texto }}">{{ texto }}</div>
+              {% endif %}
+              
+              {% if boton_texto != blank and boton_url != blank %}
+                <a href="{{ boton_url }}" 
+                   class="hero-boton"
+                   style="color: {{ section.settings.color_boton }}; background-color: {{ section.settings.color_fondo_boton }}">
+                  {{ boton_texto }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if section.settings.mostrar_indicadores %}
+    <div class="hero-indicadores">
+      {% for i in (1..3) %}
+        {%- capture imagen_key -%}imagen_{{ i }}{%- endcapture -%}
+        {%- assign imagen = section.settings[imagen_key] -%}
+        {% if imagen != blank %}
+          <button 
+            class="indicador {% if forloop.first %}activo{% endif %}"
+            aria-label="Ir a slide {{ forloop.index }}"
+            data-slide="{{ forloop.index0 }}"
+          ></button>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+.hero-moderno {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #000;
+  height: var(--altura-desktop);
+}
+
+.hero-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.hero-fullscreen + .shopify-section {
+  margin-top: var(--altura-desktop);
+}
+
+.hero-contenedor {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-slide.activo {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.hero-imagen-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-imagen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.mobile-imagen {
+  display: none;
+}
+
+.tipo-slide .hero-slide {
+  transform: translateX(100%);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tipo-slide .hero-slide.activo {
+  transform: translateX(0);
+}
+
+.hero-contenido {
+  position: absolute;
+  max-width: 600px;
+  padding: 2rem;
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.hero-slide.activo .hero-contenido {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-align-h="left"] .hero-contenido {
+  left: 5%;
+}
+
+[data-align-h="center"] .hero-contenido {
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+[data-align-h="right"] .hero-contenido {
+  right: 5%;
+  text-align: right;
+}
+
+[data-align-v="top"] .hero-contenido {
+  top: 10%;
+}
+
+[data-align-v="center"] .hero-contenido {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+[data-align-v="bottom"] .hero-contenido {
+  bottom: 10%;
+}
+
+[data-align-h="center"][data-align-v="center"] .hero-contenido {
+  transform: translate(-50%, -50%);
+}
+
+.hero-titulo {
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin: 0 0 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-texto {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.hero-boton {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-boton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.hero-indicadores {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+  padding: 10px;
+}
+
+.indicador {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  opacity: 0.7;
+}
+
+.indicador:hover {
+  opacity: 1;
+}
+
+.indicador.activo {
+  background: #fff;
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-moderno {
+    height: var(--altura-mobile);
+  }
+  
+  .hero-fullscreen {
+    height: 100vh !important;
+  }
+
+  .desktop-imagen {
+    display: none;
+  }
+
+  .mobile-imagen {
+    display: block;
+  }
+  
+  .hero-contenido {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  [data-align-h-mobile="left"] .hero-contenido {
+    left: 5%;
+    transform: none;
+    text-align: left;
+  }
+
+  [data-align-h-mobile="center"] .hero-contenido {
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  [data-align-h-mobile="right"] .hero-contenido {
+    right: 5%;
+    left: auto;
+    transform: none;
+    text-align: right;
+  }
+
+  [data-align-v-mobile="top"] .hero-contenido {
+    top: 10%;
+    transform: none;
+  }
+
+  [data-align-v-mobile="center"] .hero-contenido {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  [data-align-v-mobile="bottom"] .hero-contenido {
+    bottom: 10%;
+    top: auto;
+    transform: none;
+  }
+
+  [data-align-h-mobile="center"][data-align-v-mobile="center"] .hero-contenido {
+    transform: translate(-50%, -50%);
+  }
+  
+  .hero-indicadores {
+    bottom: 10px;
+  }
+  
+  .hero-boton {
+    padding: 0.8rem 1.6rem;
+  }
+
+  .hero-titulo {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .hero-texto {
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .tipo-slide .hero-slide,
+  .indicador,
+  .hero-contenido {
+    transition: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const hero = document.querySelector('.hero-moderno');
+  if (!hero) return;
+
+  // Ajustar header si es fullscreen
+  if (hero.classList.contains('hero-fullscreen')) {
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.position = 'relative';
+      header.style.zIndex = '1';
+      header.style.background = 'transparent';
+    }
+  }
+
+  const slides = hero.querySelectorAll('.hero-slide');
+  const indicadores = hero.querySelectorAll('.indicador');
+  let indiceActual = 0;
+  let temporizador;
+  const intervalo = {{ section.settings.intervalo | default: 5 }} * 1000;
+  let isTransitioning = false;
+
+  function precargarSiguiente() {
+    const siguienteIndice = (indiceActual + 1) % slides.length;
+    const siguienteSlide = slides[siguienteIndice];
+    const imgs = siguienteSlide.querySelectorAll('img');
+    imgs.forEach(img => {
+      if (img && img.dataset.src) {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      }
+    });
+  }
+
+  function actualizarSlide(nuevoIndice) {
+    if (isTransitioning || nuevoIndice === indiceActual) return;
+    isTransitioning = true;
+
+    slides[indiceActual].classList.remove('activo');
+    indicadores[indiceActual]?.classList.remove('activo');
+    
+    indiceActual = nuevoIndice;
+    
+    slides[indiceActual].classList.add('activo');
+    indicadores[indiceActual]?.classList.add('activo');
+    
+    setTimeout(() => {
+      isTransitioning = false;
+      precargarSiguiente();
+    }, 800);
+  }
+
+  function siguienteSlide() {
+    const nuevoIndice = (indiceActual + 1) % slides.length;
+    actualizarSlide(nuevoIndice);
+  }
+
+  function iniciarTemporizador() {
+    clearInterval(temporizador);
+    if (slides.length > 1) {
+      temporizador = setInterval(siguienteSlide, intervalo);
+    }
+  }
+
+  // Event Listeners
+  indicadores.forEach((indicador, indice) => {
+    indicador.addEventListener('click', () => {
+      actualizarSlide(indice);
+      iniciarTemporizador();
+    });
+  });
+
+  // Pausar en hover
+  if (window.matchMedia('(hover: hover)').matches) {
+    hero.addEventListener('mouseenter', () => clearInterval(temporizador));
+    hero.addEventListener('mouseleave', iniciarTemporizador);
+  }
+
+  // Soporte para gestos táctiles
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  hero.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  hero.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        siguienteSlide();
+      } else {
+        const nuevoIndice = (indiceActual - 1 + slides.length) % slides.length;
+        actualizarSlide(nuevoIndice);
+      }
+      iniciarTemporizador();
+    }
+  }, { passive: true });
+
+  // Inicialización
+  if (slides.length > 0) {
+    precargarSiguiente();
+    iniciarTemporizador();
+  }
+});
+</script>

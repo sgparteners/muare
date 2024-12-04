@@ -1,0 +1,347 @@
+{% schema %}
+{
+  "name": "Galería de Videos",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configuración General"
+    },
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título de la Sección",
+      "default": "Nuestros Videos"
+    },
+    {
+      "type": "range",
+      "id": "tamano_titulo",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño del Título",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "descripcion",
+      "label": "Descripción",
+      "default": "Explora nuestra colección de videos"
+    },
+    {
+      "type": "range",
+      "id": "tamano_descripcion",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de la Descripción",
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "estilo_grid",
+      "label": "Estilo de Visualización",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Cuadrícula"
+        },
+        {
+          "value": "lista",
+          "label": "Lista"
+        }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "range",
+      "id": "columnas",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Videos por fila",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "espacio",
+      "min": 16,
+      "max": 64,
+      "step": 8,
+      "label": "Espacio entre videos (px)",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "color_fondo",
+      "label": "Color de Fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_texto",
+      "label": "Color del Texto",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "color_boton",
+      "label": "Color del Botón de Play",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Título del Video",
+          "default": "Título del Video"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video de Shopify"
+        },
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Imagen de Vista Previa (opcional)"
+        },
+        {
+          "type": "textarea",
+          "id": "descripcion",
+          "label": "Descripción del Video",
+          "default": "Breve descripción del video"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galería de Videos",
+      "category": "Video",
+      "blocks": [
+        {
+          "type": "video"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="video-gallery" 
+     style="background-color: {{ section.settings.color_fondo }}; 
+            color: {{ section.settings.color_texto }};">
+  <div class="contenedor">
+    {% if section.settings.titulo != blank %}
+      <h2 class="titulo" style="font-size: {{ section.settings.tamano_titulo }}px;">
+        {{ section.settings.titulo }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.descripcion != blank %}
+      <div class="descripcion" style="font-size: {{ section.settings.tamano_descripcion }}px;">
+        {{ section.settings.descripcion }}
+      </div>
+    {% endif %}
+
+    <div class="videos-grid {% if section.settings.estilo_grid == 'lista' %}videos-lista{% endif %}"
+         style="--columns: {{ section.settings.columnas }}; 
+                --gap: {{ section.settings.espacio }}px;">
+      {% for block in section.blocks %}
+        {% if block.type == 'video' and block.settings.video != blank %}
+          <div class="video-item" {{ block.shopify_attributes }}>
+            <div class="video-wrapper">
+              {% if block.settings.thumbnail %}
+                <img src="{{ block.settings.thumbnail | img_url: '800x' }}"
+                     alt="{{ block.settings.titulo }}"
+                     class="video-thumbnail"
+                     loading="lazy"
+                     width="800"
+                     height="450">
+              {% endif %}
+              
+              {{ block.settings.video | video_tag: controls: true, 
+                                                image_size: '800x', 
+                                                autoplay: false, 
+                                                loop: false, 
+                                                muted: false, 
+                                                preload: "none" }}
+
+              {% if block.settings.titulo != blank %}
+                <div class="video-info">
+                  <h3 class="video-title">{{ block.settings.titulo }}</h3>
+                  {% if block.settings.descripcion != blank %}
+                    <p class="video-description">{{ block.settings.descripcion }}</p>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.video-gallery {
+  padding: 4rem 1rem;
+  font-family: var(--font-body-family);
+}
+
+.contenedor {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-style: var(--font-heading-style);
+  line-height: 1.2;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.descripcion {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease 0.2s forwards;
+}
+
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: var(--gap);
+  margin: 0 auto;
+}
+
+.videos-lista {
+  grid-template-columns: 1fr;
+  max-width: 800px;
+}
+
+.video-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-wrapper:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.video-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: #fff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.video-wrapper:hover .video-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.video-title {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+}
+
+.video-description {
+  font-size: 0.9rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .videos-grid:not(.videos-lista) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .titulo {
+    font-size: calc({{ section.settings.tamano_titulo }}px * 0.7) !important;
+  }
+  
+  .descripcion {
+    font-size: calc({{ section.settings.tamano_descripcion }}px * 0.8) !important;
+  }
+}
+</style>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 100;
+        entry.target.style.animation = `fadeInUp 0.8s ease ${delay}ms forwards`;
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.video-item').forEach(item => {
+    observer.observe(item);
+  });
+});
+{% endjavascript %}

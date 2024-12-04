@@ -1,0 +1,316 @@
+{% schema %}
+{
+  "name": "Galería Personalizable",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título de la Galería",
+      "default": "Nuestra Galería"
+    },
+    {
+      "type": "range",
+      "id": "tamano_titulo",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño del Título",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "descripcion",
+      "label": "Descripción",
+      "default": "Explora nuestra colección de imágenes"
+    },
+    {
+      "type": "range",
+      "id": "tamano_descripcion",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de la Descripción",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "tamano_titulos_imagen",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño Títulos de Imágenes",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "ancho_maximo_imagen",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Ancho Máximo de Imagen",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "espacio_entre_imagenes",
+      "min": 16,
+      "max": 64,
+      "step": 8,
+      "unit": "px",
+      "label": "Espacio entre Imágenes",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "color_fondo",
+      "label": "Color de Fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "color_texto",
+      "label": "Color del Texto",
+      "default": "#1a1a1a"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "imagen",
+      "name": "Imagen",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "imagen",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Título de la Imagen",
+          "default": "Título"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galería Personalizable",
+      "category": "Imagen"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="galeria-personalizable" 
+     style="background-color: {{ section.settings.color_fondo }}; color: {{ section.settings.color_texto }};">
+  
+  <div class="contenedor">
+    {% if section.settings.titulo != blank %}
+      <h2 class="titulo h1" style="font-size: {{ section.settings.tamano_titulo }}px;">
+        {{ section.settings.titulo }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.descripcion != blank %}
+      <div class="descripcion" style="font-size: {{ section.settings.tamano_descripcion }}px;">
+        {{ section.settings.descripcion }}
+      </div>
+    {% endif %}
+
+    <div class="galeria-grid"
+         style="--ancho-imagen: {{ section.settings.ancho_maximo_imagen }}px; --espacio: {{ section.settings.espacio_entre_imagenes }}px;">
+      {% for block in section.blocks %}
+        {% if block.type == 'imagen' %}
+          <div class="galeria-item" {{ block.shopify_attributes }}>
+            {% if block.settings.imagen %}
+              <div class="imagen-contenedor">
+                <img src="{{ block.settings.imagen | img_url: 'master' }}"
+                     alt="{{ block.settings.titulo }}"
+                     loading="lazy"
+                     class="imagen">
+                {% if block.settings.titulo != blank %}
+                  <div class="imagen-overlay">
+                    <h3 class="imagen-titulo h4" style="font-size: {{ section.settings.tamano_titulos_imagen }}px;">
+                      {{ block.settings.titulo }}
+                    </h3>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+.galeria-personalizable {
+  padding: 6rem 2rem;
+  overflow: hidden;
+  font-family: var(--font-body-family);
+  font-weight: var(--font-body-weight);
+  font-style: var(--font-body-style);
+}
+
+.contenedor {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-style: var(--font-heading-style);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease forwards;
+  line-height: 1.2;
+  letter-spacing: var(--font-heading-letter-spacing, 0);
+}
+
+.descripcion {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease 0.2s forwards;
+}
+
+.galeria-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio);
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.galeria-item {
+  flex: 0 1 var(--ancho-imagen);
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.imagen-contenedor {
+  position: relative;
+  padding-bottom: 100%;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.imagen-contenedor:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.imagen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.imagen-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+  padding: 2rem 1rem 1rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.imagen-contenedor:hover .imagen-overlay {
+  transform: translateY(0);
+}
+
+.imagen-titulo {
+  color: #ffffff;
+  text-align: center;
+  margin: 0;
+  line-height: 1.3;
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  font-style: var(--font-heading-style);
+  letter-spacing: var(--font-heading-letter-spacing, 0);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .galeria-personalizable {
+    padding: 4rem 1rem;
+  }
+  
+  .titulo {
+    font-size: calc({{ section.settings.tamano_titulo }}px * 0.7) !important;
+  }
+  
+  .descripcion {
+    font-size: calc({{ section.settings.tamano_descripcion }}px * 0.8) !important;
+  }
+  
+  .imagen-titulo {
+    font-size: calc({{ section.settings.tamano_titulos_imagen }}px * 0.9) !important;
+  }
+
+  .galeria-item {
+    flex: 0 1 calc(50% - var(--espacio));
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .galeria-item {
+    flex: 0 1 100%;
+  }
+}
+</style>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 100;
+        entry.target.style.animation = `fadeInUp 0.8s ease ${delay}ms forwards`;
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.galeria-item').forEach(item => {
+    observer.observe(item);
+  });
+});
+{% endjavascript %}

@@ -1,0 +1,103 @@
+{% comment %}
+  Sección de precios B2B y B2C con descuento configurable
+  Versión: 1.0.0
+  Descripción: Permite a los clientes B2C comprar sin iniciar sesión y aplica un descuento configurable a los clientes B2B que hayan iniciado sesión.
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Precios B2B y B2C",
+  "settings": [
+    {
+      "type": "text",
+      "id": "b2b_tag",
+      "label": "Etiqueta para clientes B2B",
+      "default": "b2b",
+      "info": "Los clientes con esta etiqueta serán considerados B2B"
+    },
+    {
+      "type": "range",
+      "id": "b2b_discount",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Descuento para clientes B2B",
+      "default": 10
+    },
+    {
+      "type": "checkbox",
+      "id": "show_login_prompt",
+      "label": "Mostrar mensaje de inicio de sesión para B2B",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "login_prompt",
+      "label": "Mensaje de inicio de sesión para B2B",
+      "default": "Inicia sesión para ver precios especiales B2B"
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var b2bTag = {{ section.settings.b2b_tag | json }};
+    var b2bDiscount = {{ section.settings.b2b_discount | json }};
+    var showLoginPrompt = {{ section.settings.show_login_prompt | json }};
+    var loginPrompt = {{ section.settings.login_prompt | json }};
+    
+    function applyB2BDiscount() {
+      var priceElements = document.querySelectorAll('.price');
+      priceElements.forEach(function(element) {
+        var originalPrice = parseFloat(element.getAttribute('data-original-price'));
+        var discountedPrice = originalPrice * (1 - b2bDiscount / 100);
+        element.innerHTML = '<s>' + originalPrice.toFixed(2) + '</s> ' + discountedPrice.toFixed(2);
+      });
+    }
+    
+    function showB2BLoginPrompt() {
+      if (showLoginPrompt) {
+        var promptElement = document.createElement('div');
+        promptElement.className = 'b2b-login-prompt';
+        promptElement.textContent = loginPrompt;
+        document.body.insertBefore(promptElement, document.body.firstChild);
+      }
+    }
+    
+    {% if customer %}
+      if ({{ customer.tags | json }}.includes(b2bTag)) {
+        applyB2BDiscount();
+      }
+    {% else %}
+      showB2BLoginPrompt();
+    {% endif %}
+  });
+</script>
+
+<style>
+  .b2b-login-prompt {
+    background-color: #f8f8f8;
+    color: #333;
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .price s {
+    color: #999;
+    margin-right: 5px;
+  }
+</style>
+
+{% comment %}
+  Instrucciones de uso:
+  1. Copia este archivo en la carpeta 'sections' de tu tema de Shopify.
+  2. Nombra el archivo como 'b2b-b2c-pricing.liquid'.
+  3. En el editor de temas de Shopify, añade esta sección a las plantillas de producto o colección.
+  4. Configura la etiqueta B2B y el porcentaje de descuento en los ajustes de la sección.
+  5. Asegúrate de que los precios en tu tienda tengan la clase 'price' y el atributo 'data-original-price'.
+  6. Etiqueta a tus clientes B2B con la etiqueta configurada en los ajustes de la sección.
+{% endcomment %}

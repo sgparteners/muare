@@ -1,0 +1,254 @@
+{% schema %}
+{
+  "name": "Galería Parallax",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título de la sección",
+      "default": "Nuestra Galería"
+    },
+    {
+      "type": "header",
+      "content": "Imágenes"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "imagen",
+      "name": "Imagen",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "imagen",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "titulo",
+          "label": "Título",
+          "default": "Título de la imagen"
+        },
+        {
+          "type": "text",
+          "id": "subtitulo",
+          "label": "Subtítulo",
+          "default": "Descripción breve"
+        },
+        {
+          "type": "range",
+          "id": "velocidad",
+          "min": 0.1,
+          "max": 0.9,
+          "step": 0.1,
+          "label": "Velocidad del parallax",
+          "default": 0.5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galería Parallax",
+      "blocks": [
+        {
+          "type": "imagen"
+        },
+        {
+          "type": "imagen"
+        },
+        {
+          "type": "imagen"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<section class="galeria-parallax">
+  <h2 class="galeria-titulo">{{ section.settings.titulo }}</h2>
+  
+  <div class="galeria-contenedor">
+    {% for block in section.blocks %}
+      {% if block.type == 'imagen' and block.settings.imagen != blank %}
+        <div class="galeria-item" {{ block.shopify_attributes }}>
+          <div class="parallax-wrapper" data-speed="{{ block.settings.velocidad | default: 0.5 }}">
+            <img 
+              src="{{ block.settings.imagen | img_url: '100x' }}"
+              data-src="{{ block.settings.imagen | img_url: '800x' }}"
+              alt="{{ block.settings.imagen.alt | escape }}"
+              class="parallax-imagen lazyload"
+              width="{{ block.settings.imagen.width }}"
+              height="{{ block.settings.imagen.height }}"
+              loading="lazy"
+            >
+          </div>
+          <div class="galeria-contenido">
+            <h3>{{ block.settings.titulo }}</h3>
+            <p>{{ block.settings.subtitulo }}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+.galeria-parallax {
+  padding: 4rem 0;
+  background: #f8f8f8;
+  overflow: hidden;
+}
+
+.galeria-titulo {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  color: #333;
+}
+
+.galeria-contenedor {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.galeria-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: #000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.parallax-wrapper {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  overflow: hidden;
+}
+
+.parallax-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.galeria-contenido {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.galeria-item:hover .galeria-contenido {
+  transform: translateY(0);
+}
+
+.galeria-contenido h3 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.galeria-contenido p {
+  margin: 0;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parallax-imagen {
+    transition: none;
+  }
+  
+  .galeria-contenido {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .galeria-titulo {
+    font-size: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .galeria-item {
+    aspect-ratio: 2/3;
+  }
+  
+  .galeria-contenido {
+    transform: none;
+    opacity: 1;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const parallaxItems = document.querySelectorAll('.parallax-wrapper');
+  let ticking = false;
+  let lastScrollY = window.scrollY;
+
+  function updateParallax() {
+    parallaxItems.forEach(wrapper => {
+      const rect = wrapper.getBoundingClientRect();
+      const speed = parseFloat(wrapper.dataset.speed);
+      const centerOffset = (rect.top + rect.height / 2) - window.innerHeight / 2;
+      
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const imagen = wrapper.querySelector('.parallax-imagen');
+        const translateY = centerOffset * speed;
+        imagen.style.transform = `translateY(${translateY}px) scale(1.1)`;
+      }
+    });
+    
+    ticking = false;
+  }
+
+  function onScroll() {
+    lastScrollY = window.scrollY;
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelector('.parallax-imagen').classList.add('visible');
+      }
+    });
+  }, observerOptions);
+
+  parallaxItems.forEach(item => observer.observe(item));
+  window.addEventListener('scroll', onScroll, { passive: true });
+  updateParallax();
+});
+</script>

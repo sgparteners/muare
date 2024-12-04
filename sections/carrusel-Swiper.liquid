@@ -1,0 +1,112 @@
+{% schema %}
+{
+  "name": "Coverflow Carousel",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "rotate",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "°",
+      "label": "Rotation Angle",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "depth",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "label": "Depth Effect",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Coverflow Carousel",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<style>
+.coverflow-carousel {
+  background: #010101;
+  font-size: 14px;
+  color: #010101;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.coverflow-carousel .swiper {
+  padding-top: 50px;
+  padding-bottom: 140px;
+}
+
+.coverflow-carousel .swiper-slide {
+  background-position: center;
+  background-size: cover;
+  border-radius: 10px;
+  width: 300px;
+  height: 250px;
+  filter: saturate(1.2);
+  -webkit-box-reflect: below 1px linear-gradient(transparent, transparent, #0006);
+}
+
+.coverflow-carousel .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+</style>
+
+<section class="coverflow-carousel">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% assign collection = collections[section.settings.collection] %}
+      {% for product in collection.products %}
+        <div class="swiper-slide">
+          {% if product.featured_image %}
+            {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.featured_image.alt }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  new Swiper('.coverflow-carousel .swiper', {
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    effect: 'coverflow',
+    loop: true,
+    coverflowEffect: {
+      rotate: {{ section.settings.rotate }},
+      stretch: 0,
+      depth: {{ section.settings.depth }},
+      modifier: 1,
+      slideShadows: true
+    }
+  });
+});
+</script>

@@ -1,0 +1,493 @@
+{% schema %}
+{
+  "name": "Showcase de Colecciones",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título de la sección",
+      "default": "Nuestras Colecciones"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "label": "Espacio entre elementos",
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "rotate",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "°",
+      "label": "Ángulo de Rotación (Móvil)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "depth",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "label": "Efecto de Profundidad (Móvil)",
+      "default": 100
+    }
+  ],
+  "blocks": [
+    {
+      "type": "coleccion",
+      "name": "Colección",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "coleccion",
+          "label": "Colección"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Showcase de Colecciones",
+      "blocks": [
+        {
+          "type": "coleccion"
+        },
+        {
+          "type": "coleccion"
+        },
+        {
+          "type": "coleccion"
+        },
+        {
+          "type": "coleccion"
+        },
+        {
+          "type": "coleccion"
+        },
+        {
+          "type": "coleccion"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+{% if section.settings.titulo != blank %}
+  <h2 class="showcase-titulo">{{ section.settings.titulo }}</h2>
+{% endif %}
+
+<!-- Vista Desktop: Mosaico -->
+<div class="mosaico-wrapper">
+  <section class="mosaico-colecciones">
+    <div class="mosaico-grid" style="--gap: {{ section.settings.gap }}px;">
+      {% assign valid_blocks = 0 %}
+      {% for block in section.blocks %}
+        {% if block.settings.coleccion != blank %}
+          {% assign valid_blocks = valid_blocks | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+
+      {% if valid_blocks > 0 %}
+        {% for block in section.blocks limit: 6 %}
+          {% if block.settings.coleccion != blank %}
+            {% assign collection = collections[block.settings.coleccion] %}
+            <div class="mosaico-item item-{{ forloop.index }}" {{ block.shopify_attributes }}>
+              <a href="{{ collection.url }}" class="mosaico-link">
+                <div class="mosaico-contenedor">
+                  {% if collection.image != blank %}
+                    <img 
+                      src="{{ collection.image | img_url: '100x' }}"
+                      data-src="{{ collection.image | img_url: '1000x' }}"
+                      alt="{{ collection.title | escape }}"
+                      class="mosaico-imagen lazyload"
+                      loading="lazy"
+                    >
+                  {% elsif collection.products.first.featured_image != blank %}
+                    <img 
+                      src="{{ collection.products.first.featured_image | img_url: '100x' }}"
+                      data-src="{{ collection.products.first.featured_image | img_url: '1000x' }}"
+                      alt="{{ collection.title | escape }}"
+                      class="mosaico-imagen lazyload"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {{ 'collection-1' | placeholder_svg_tag: 'mosaico-imagen placeholder' }}
+                  {% endif %}
+                  
+                  <div class="mosaico-overlay">
+                    <div class="mosaico-contenido">
+                      <h3>{{ collection.title }}</h3>
+                      {% if collection.description != blank %}
+                        <p>{{ collection.description | strip_html | truncatewords: 12 }}</p>
+                      {% endif %}
+                      <span class="productos-count">{{ collection.products_count }} productos</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<!-- Vista Móvil: Carrusel Coverflow -->
+<section class="coverflow-carousel">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+        {% if block.settings.coleccion != blank %}
+          {% assign collection = collections[block.settings.coleccion] %}
+          <div class="swiper-slide" {{ block.shopify_attributes }}>
+            <a href="{{ collection.url }}" class="carousel-link">
+              {% if collection.image != blank %}
+                {{ collection.image | image_url: width: 480 | image_tag: loading: 'lazy', alt: collection.title }}
+              {% elsif collection.products.first.featured_image != blank %}
+                {{ collection.products.first.featured_image | image_url: width: 480 | image_tag: loading: 'lazy', alt: collection.title }}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder' }}
+              {% endif %}
+              <div class="carousel-overlay">
+                <h3>{{ collection.title }}</h3>
+                <span class="carousel-count">{{ collection.products_count }} productos</span>
+              </div>
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+</section>
+
+<style>
+.showcase-titulo {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #333;
+  font-weight: 600;
+}
+
+/* Estilos del Mosaico (Desktop) */
+.mosaico-wrapper {
+  display: none;
+  width: 100%;
+  max-width: 100vw;
+  background: #fff;
+  padding: clamp(1.5rem, 5vw, 4rem) 0;
+}
+
+.mosaico-colecciones {
+  width: 100%;
+  max-width: 1600px;
+  padding: 0 clamp(1rem, 3vw, 2rem);
+  margin: 0 auto;
+}
+
+.mosaico-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: minmax(200px, auto);
+  gap: var(--gap);
+  min-height: 600px;
+}
+
+/* Layout específico para 6 elementos */
+.mosaico-item.item-1 {
+  grid-column: 1 / span 4;
+  grid-row: 1 / span 2;
+  min-height: 400px;
+}
+
+.mosaico-item.item-2 {
+  grid-column: 5 / span 2;
+  grid-row: 1 / span 2;
+  min-height: 400px;
+}
+
+.mosaico-item.item-3 {
+  grid-column: 1 / span 3;
+  grid-row: 3 / span 2;
+  min-height: 300px;
+}
+
+.mosaico-item.item-4 {
+  grid-column: 4 / span 3;
+  grid-row: 3 / span 2;
+  min-height: 300px;
+}
+
+.mosaico-item.item-5 {
+  grid-column: 1 / span 3;
+  grid-row: 5 / span 1;
+  min-height: 200px;
+}
+
+.mosaico-item.item-6 {
+  grid-column: 4 / span 3;
+  grid-row: 5 / span 1;
+  min-height: 200px;
+}
+
+/* Estilos de items del Mosaico */
+.mosaico-item {
+  position: relative;
+  border-radius: clamp(8px, 2vw, 12px);
+  overflow: hidden;
+  background: #f5f5f5;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.mosaico-contenedor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.mosaico-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mosaico-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.4), rgba(0,0,0,0.1));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  align-items: flex-end;
+}
+
+.mosaico-contenido {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  color: white;
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.mosaico-contenido h3 {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.mosaico-contenido p {
+  font-size: clamp(0.85rem, 1.5vw, 0.95rem);
+  margin: 0 0 0.75rem;
+  opacity: 0.9;
+}
+
+.productos-count {
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  background: rgba(255,255,255,0.2);
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  backdrop-filter: blur(4px);
+}
+
+/* Carrusel Coverflow (Móvil) */
+.coverflow-carousel {
+  background: #ffffff;
+  min-height: 60vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 0;
+}
+
+.coverflow-carousel .swiper {
+  padding: 20px 0 60px;
+  width: 100%;
+}
+
+.coverflow-carousel .swiper-slide {
+  width: 240px;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  transform-origin: center;
+  transition: transform 0.6s ease;
+}
+
+.coverflow-carousel .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 0.6s ease;
+}
+
+.carousel-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+  padding: 20px 15px;
+  transform: translateY(100%);
+  transition: transform 0.4s ease;
+}
+
+.carousel-overlay h3 {
+  color: white;
+  margin: 0 0 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.carousel-count {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: white;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 50px;
+  backdrop-filter: blur(4px);
+}
+
+.swiper-slide-active {
+  transform: scale(1.1);
+}
+
+.swiper-slide-active .carousel-overlay {
+  transform: translateY(0);
+}
+
+/* Estilos de Swiper */
+.swiper-pagination-bullet {
+  background: #333;
+  opacity: 0.5;
+}
+
+.swiper-pagination-bullet-active {
+  background: #333;
+  opacity: 1;
+}
+
+/* Media Queries */
+@media (hover: hover) {
+  .mosaico-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .mosaico-item:hover .mosaico-imagen {
+    transform: scale(1.1);
+  }
+  
+  .mosaico-item:hover .mosaico-overlay {
+    opacity: 1;
+  }
+  
+  .mosaico-item:hover .mosaico-contenido {
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .mosaico-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(200px, auto);
+  }
+
+  .mosaico-item {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    min-height: 250px !important;
+  }
+
+  .mosaico-item.item-1 {
+    grid-column: span 2 !important;
+    min-height: 300px !important;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .mosaico-wrapper {
+    display: block;
+  }
+  
+  .coverflow-carousel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaico-item,
+  .mosaico-imagen,
+  .mosaico-overlay,
+  .mosaico-contenido {
+    transition: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Inicializar Swiper para móvil
+  new Swiper('.coverflow-carousel .swiper', {
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 1.5,
+    spaceBetween: 20,
+    effect: 'coverflow',
+    loop: true,
+    coverflowEffect: {
+      rotate: {{ section.settings.rotate }},
+      stretch: 0,
+      depth: {{ section.settings.depth }},
+      modifier: 1,
+      slideShadows: false
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true
+    }
+  });
+
+  // Lazy loading para imágenes del mosaico
+  const observerOptions = {
+    root: null,
+    rootMargin: '50px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target.querySelector('.mosaico-imagen');
+        if (img && img.dataset.src) {
+          img.src = img.dataset.src;
+          delete img.dataset.src;
+        }
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.mosaico-item').forEach(item => {
+    observer.observe(item);
+  });
+});
+</script>

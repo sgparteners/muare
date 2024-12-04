@@ -1,0 +1,158 @@
+{% schema %}
+{
+  "name": "Productos relacionados",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "Productos relacionados"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "min": 5,
+      "max": 50,
+      "step": 5,
+      "label": "Máximo número de productos",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Productos relacionados",
+      "category": "Producto"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="related-products">
+  <h2>{{ section.settings.title }}</h2>
+  
+  <div class="related-products__container">
+    <div class="related-products__scroll" id="relatedProductsScroll">
+      {% assign current_product_words = product.title | split: ' ' %}
+      {% assign current_product_name = current_product_words | first | downcase %}
+      {% assign current_product_type = current_product_words | last | downcase %}
+      {% assign related_products_count = 0 %}
+      {% assign current_collection = product.collections | first %}
+      
+      {% for related_product in collections.all.products %}
+        {% if related_products_count >= section.settings.max_products %}
+          {% break %}
+        {% endif %}
+        
+        {% assign related_product_words = related_product.title | split: ' ' %}
+        {% assign related_product_name = related_product_words | first | downcase %}
+        {% assign related_product_type = related_product_words | last | downcase %}
+        
+        {% if related_product.id != product.id %}
+          {% if related_product_name == current_product_name and related_product_type == current_product_type or related_product.collections contains current_collection %}
+            <div class="related-product">
+              <a href="{{ related_product.url }}">
+                <img src="{{ related_product.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ related_product.title }}" loading="lazy">
+                <h3>{{ related_product.title }}</h3>
+                <p>{{ related_product.price | money }}</p>
+              </a>
+            </div>
+            {% assign related_products_count = related_products_count | plus: 1 %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      
+      {% if related_products_count == 0 %}
+        <p class="no-related-products">No se encontraron productos relacionados.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .related-products__container {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+  }
+
+  .related-products__scroll {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  .related-products__scroll::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+
+  .related-product {
+    flex: 0 0 auto;
+    width: 200px;
+    text-align: center;
+  }
+
+  .related-product img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .related-product h3 {
+    margin: 10px 0 5px;
+    font-size: 16px;
+  }
+
+  .related-product p {
+    margin: 0;
+    color: #666;
+  }
+
+  .no-related-products {
+    width: 100%;
+    text-align: center;
+    color: #666;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const scrollContainer = document.getElementById('relatedProductsScroll');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    scrollContainer.addEventListener('mousedown', (e) => {
+      isDown = true;
+      scrollContainer.style.cursor = 'grabbing';
+      startX = e.pageX - scrollContainer.offsetLeft;
+      scrollLeft = scrollContainer.scrollLeft;
+    });
+
+    scrollContainer.addEventListener('mouseleave', () => {
+      isDown = false;
+      scrollContainer.style.cursor = 'grab';
+    });
+
+    scrollContainer.addEventListener('mouseup', () => {
+      isDown = false;
+      scrollContainer.style.cursor = 'grab';
+    });
+
+    scrollContainer.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scrollContainer.offsetLeft;
+      const walk = (x - startX) * 2;
+      scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    // Enable touch scrolling
+    scrollContainer.style.overflowX = 'auto';
+    scrollContainer.style.webkitOverflowScrolling = 'touch';
+  });
+</script>

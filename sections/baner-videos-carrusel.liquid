@@ -1,0 +1,731 @@
+{% schema %}
+{
+  "name": "Video Banner Moderno",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Diseño General"
+    },
+    {
+      "type": "select",
+      "id": "modo_visualizacion",
+      "label": "Modo de visualización",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal (debajo del menú)"
+        },
+        {
+          "value": "fullscreen",
+          "label": "Pantalla completa"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "range",
+      "id": "altura_desktop",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Altura del banner (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "altura_mobile",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Altura del banner (Mobile)",
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título",
+      "default": "Nueva Colección"
+    },
+    {
+      "type": "richtext",
+      "id": "subtitulo",
+      "label": "Subtítulo",
+      "default": "<p>WW24/25: Made for the mountains</p>"
+    },
+    {
+      "type": "header",
+      "content": "Videos"
+    },
+    {
+      "type": "text",
+      "id": "video_1",
+      "label": "URL Video 1 (Desktop)",
+      "info": "Formato MP4"
+    },
+    {
+      "type": "text",
+      "id": "video_1_mobile",
+      "label": "URL Video 1 (Mobile)",
+      "info": "Formato MP4. Si se deja vacío, se usará el video desktop"
+    },
+    {
+      "type": "text",
+      "id": "video_2",
+      "label": "URL Video 2 (Desktop)",
+      "info": "Formato MP4"
+    },
+    {
+      "type": "text",
+      "id": "video_2_mobile",
+      "label": "URL Video 2 (Mobile)",
+      "info": "Formato MP4"
+    },
+    {
+      "type": "text",
+      "id": "video_3",
+      "label": "URL Video 3 (Desktop)",
+      "info": "Formato MP4"
+    },
+    {
+      "type": "text",
+      "id": "video_3_mobile",
+      "label": "URL Video 3 (Mobile)",
+      "info": "Formato MP4"
+    },
+    {
+      "type": "header",
+      "content": "Estilos Desktop"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_horizontal",
+      "label": "Alineación horizontal del contenido",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_vertical",
+      "label": "Alineación vertical del contenido",
+      "options": [
+        {
+          "value": "top",
+          "label": "Arriba"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "bottom",
+          "label": "Abajo"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Estilos Mobile"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_horizontal_mobile",
+      "label": "Alineación horizontal del contenido (Mobile)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Izquierda"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "right",
+          "label": "Derecha"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "alineacion_vertical_mobile",
+      "label": "Alineación vertical del contenido (Mobile)",
+      "options": [
+        {
+          "value": "top",
+          "label": "Arriba"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "bottom",
+          "label": "Abajo"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Configuración"
+    },
+    {
+      "type": "range",
+      "id": "duracion_video",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "unit": "seg",
+      "label": "Duración de cada video",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "opacidad_overlay",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Opacidad del overlay",
+      "default": 0.4
+    },
+    {
+      "type": "checkbox",
+      "id": "mostrar_indicadores",
+      "label": "Mostrar indicadores",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "boton",
+      "name": "Botón",
+      "settings": [
+        {
+          "type": "text",
+          "id": "texto_boton",
+          "label": "Texto del botón",
+          "default": "Ver más"
+        },
+        {
+          "type": "url",
+          "id": "url_boton",
+          "label": "Enlace del botón"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Banner Moderno",
+      "category": "Video"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="video-banner {% if section.settings.modo_visualizacion == 'fullscreen' %}fullscreen{% endif %}" 
+     style="--altura-desktop: {{ section.settings.altura_desktop }}vh; --altura-mobile: {{ section.settings.altura_mobile }}vh;"
+     data-align-h="{{ section.settings.alineacion_horizontal }}"
+     data-align-v="{{ section.settings.alineacion_vertical }}"
+     data-align-h-mobile="{{ section.settings.alineacion_horizontal_mobile }}"
+     data-align-v-mobile="{{ section.settings.alineacion_vertical_mobile }}">
+  
+  <div class="video-container">
+    <div class="video-wrapper activo">
+      <video id="video1" class="video-player desktop-video" playsinline muted autoplay preload="auto">
+        <source src="{{ section.settings.video_1 }}" type="video/mp4">
+      </video>
+      {% if section.settings.video_1_mobile != blank %}
+        <video id="video1-mobile" class="video-player mobile-video" playsinline muted autoplay preload="auto">
+          <source src="{{ section.settings.video_1_mobile }}" type="video/mp4">
+        </video>
+      {% else %}
+        <video id="video1-mobile" class="video-player mobile-video" playsinline muted autoplay preload="auto">
+          <source src="{{ section.settings.video_1 }}" type="video/mp4">
+        </video>
+      {% endif %}
+    </div>
+
+    {% if section.settings.video_2 != blank %}
+      <div class="video-wrapper">
+        <video id="video2" class="video-player desktop-video" playsinline muted preload="auto">
+          <source src="{{ section.settings.video_2 }}" type="video/mp4">
+        </video>
+        {% if section.settings.video_2_mobile != blank %}
+          <video id="video2-mobile" class="video-player mobile-video" playsinline muted preload="auto">
+            <source src="{{ section.settings.video_2_mobile }}" type="video/mp4">
+          </video>
+        {% else %}
+          <video id="video2-mobile" class="video-player mobile-video" playsinline muted preload="auto">
+            <source src="{{ section.settings.video_2 }}" type="video/mp4">
+          </video>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.video_3 != blank %}
+      <div class="video-wrapper">
+        <video id="video3" class="video-player desktop-video" playsinline muted preload="auto">
+          <source src="{{ section.settings.video_3 }}" type="video/mp4">
+        </video>
+        {% if section.settings.video_3_mobile != blank %}
+          <video id="video3-mobile" class="video-player mobile-video" playsinline muted preload="auto">
+            <source src="{{ section.settings.video_3_mobile }}" type="video/mp4">
+          </video>
+        {% else %}
+          <video id="video3-mobile" class="video-player mobile-video" playsinline muted preload="auto">
+            <source src="{{ section.settings.video_3 }}" type="video/mp4">
+          </video>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="overlay" style="background-color: rgba(0, 0, 0, {{ section.settings.opacidad_overlay }})"></div>
+    
+    <div class="contenido-banner">
+      {% if section.settings.titulo != blank %}
+        <h1 class="titulo-banner">{{ section.settings.titulo }}</h1>
+      {% endif %}
+      
+      {% if section.settings.subtitulo != blank %}
+        <div class="subtitulo-banner">{{ section.settings.subtitulo }}</div>
+      {% endif %}
+      
+      {% if section.blocks.size > 0 %}
+        <div class="botones-banner">
+          {% for block in section.blocks %}
+            {% if block.type == 'boton' and block.settings.texto_boton != blank and block.settings.url_boton != blank %}
+              <a href="{{ block.settings.url_boton }}" class="boton-banner">
+                {{ block.settings.texto_boton }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% if section.settings.mostrar_indicadores %}
+      <div class="indicadores-banner">
+        <button class="indicador activo" data-index="0" aria-label="Video 1"></button>
+        {% if section.settings.video_2 != blank %}
+          <button class="indicador" data-index="1" aria-label="Video 2"></button>
+        {% endif %}
+        {% if section.settings.video_3 != blank %}
+          <button class="indicador" data-index="2" aria-label="Video 3"></button>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+.video-banner {
+  position: relative;
+  width: 100%;
+  height: var(--altura-desktop);
+  overflow: hidden;
+}
+
+.video-banner.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
+.video-banner.fullscreen + .shopify-section {
+  margin-top: var(--altura-desktop);
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.video-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+}
+
+.video-wrapper.activo {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.video-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-video {
+  display: none;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.contenido-banner {
+  position: absolute;
+  z-index: 3;
+  color: #fff;
+  padding: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Alineación Desktop */
+[data-align-h="left"] .contenido-banner {
+  text-align: left;
+  left: 5%;
+}
+
+[data-align-h="center"] .contenido-banner {
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+[data-align-h="right"] .contenido-banner {
+  text-align: right;
+  right: 5%;
+}
+
+[data-align-v="top"] .contenido-banner {
+  top: 10%;
+}
+
+[data-align-v="center"] .contenido-banner {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+[data-align-v="bottom"] .contenido-banner {
+  bottom: 10%;
+}
+
+[data-align-h="center"][data-align-v="center"] .contenido-banner {
+  transform: translate(-50%, -50%);
+}
+
+.titulo-banner {
+  font-size: clamp(2rem, 5vw, 4rem);
+  margin-bottom: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitulo-banner {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  opacity: 0.9;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.botones-banner {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+[data-align-h="center"] .botones-banner {
+  justify-content: center;
+}
+
+[data-align-h="right"] .botones-banner {
+  justify-content: flex-end;
+}
+
+.boton-banner {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.boton-banner:hover {
+  transform: translateY(-2px);
+  background-color: #f0f0f0;
+}
+
+.indicadores-banner {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 3;
+}
+
+.indicador {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  opacity: 0.7;
+}
+
+.indicador:hover {
+  opacity: 1;
+}
+
+.indicador.activo {
+  background: #fff;
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .video-banner {
+    height: var(--altura-mobile);
+  }
+
+  .desktop-video {
+    display: none;
+  }
+
+  .mobile-video {
+    display: block;
+  }
+
+  .contenido-banner {
+    padding: 1.5rem;
+  }
+
+  /* Alineación Mobile */
+  [data-align-h-mobile="left"] .contenido-banner {
+    text-align: left;
+    left: 5%;
+    transform: none;
+  }
+
+  [data-align-h-mobile="center"] .contenido-banner {
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  [data-align-h-mobile="right"] .contenido-banner {
+    text-align: right;
+    right: 5%;
+    left: auto;
+    transform: none;
+  }
+
+  [data-align-v-mobile="top"] .contenido-banner {
+    top: 10%;
+    transform: none;
+  }
+
+  [data-align-v-mobile="center"] .contenido-banner {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  [data-align-v-mobile="bottom"] .contenido-banner {
+    bottom: 10%;
+    top: auto;
+    transform: none;
+  }
+
+  [data-align-h-mobile="center"][data-align-v-mobile="center"] .contenido-banner {
+    transform: translate(-50%, -50%);
+  }
+
+  .titulo-banner {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .subtitulo-banner {
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+  }
+
+  .botones-banner {
+    justify-content: center;
+  }
+
+  .boton-banner {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 1.6rem;
+  }
+
+  .indicadores-banner {
+    bottom: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-wrapper,
+  .boton-banner,
+  .indicador {
+    transition: none;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const banner = document.querySelector('.video-banner');
+  if (!banner) return;
+
+  const videoWrappers = banner.querySelectorAll('.video-wrapper');
+  const indicadores = banner.querySelectorAll('.indicador');
+  const duracion = {{ section.settings.duracion_video | default: 10 }} * 1000;
+  
+  let currentIndex = 0;
+  let isTransitioning = false;
+  let temporizador;
+
+  function precargarVideo(videoWrapper) {
+    const videos = videoWrapper.querySelectorAll('video');
+    return Promise.all([...videos].map(video => {
+      return new Promise((resolve, reject) => {
+        if (video.readyState >= 3) {
+          resolve();
+        } else {
+          video.load();
+          video.addEventListener('canplay', resolve, { once: true });
+          video.addEventListener('error', reject, { once: true });
+        }
+      });
+    }));
+  }
+
+  async function cambiarVideo(nuevoIndice) {
+    if (isTransitioning || nuevoIndice === currentIndex) return;
+    isTransitioning = true;
+
+    // Actualizar indicadores
+    indicadores.forEach(ind => ind.classList.remove('activo'));
+    indicadores[nuevoIndice]?.classList.add('activo');
+
+    const currentWrapper = videoWrappers[currentIndex];
+    const nextWrapper = videoWrappers[nuevoIndice];
+    
+    try {
+      // Preparar siguiente video
+      await precargarVideo(nextWrapper);
+      
+      // Iniciar reproducción y transición
+      nextWrapper.querySelectorAll('video').forEach(video => {
+        video.currentTime = 0;
+        video.play();
+      });
+      
+      nextWrapper.classList.add('activo');
+      currentWrapper.classList.remove('activo');
+      
+      // Esperar a que termine la transición
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      currentIndex = nuevoIndice;
+      isTransitioning = false;
+      
+      // Reiniciar temporizador
+      clearTimeout(temporizador);
+      if (videoWrappers.length > 1) {
+        temporizador = setTimeout(() => {
+          const nextIndex = (currentIndex + 1) % videoWrappers.length;
+          cambiarVideo(nextIndex);
+        }, duracion);
+      }
+    } catch (error) {
+      console.error('Error al cambiar video:', error);
+      isTransitioning = false;
+    }
+  }
+
+  // Event Listeners para indicadores
+  indicadores.forEach((indicador, index) => {
+    indicador.addEventListener('click', () => {
+      cambiarVideo(index);
+    });
+  });
+
+  // Iniciar el primer video y temporizador
+  if (videoWrappers.length > 0) {
+    const firstVideos = videoWrappers[0].querySelectorAll('video');
+    Promise.all([...firstVideos].map(video => video.play()))
+      .then(() => {
+        if (videoWrappers.length > 1) {
+          temporizador = setTimeout(() => {
+            cambiarVideo(1);
+          }, duracion);
+        }
+      })
+      .catch(error => {
+        console.error('Error al reproducir el primer video:', error);
+      });
+  }
+
+  // Asegurar que los videos estén muteados y se repitan
+  banner.querySelectorAll('video').forEach(video => {
+    video.muted = true;
+    video.addEventListener('ended', () => {
+      video.currentTime = 0;
+      video.play();
+    });
+  });
+
+  // Ajustar header si es fullscreen
+  if (banner.classList.contains('fullscreen')) {
+    const header = document.querySelector('header');
+    if (header) {
+      header.style.position = 'relative';
+      header.style.zIndex = '1';
+      header.style.background = 'transparent';
+    }
+  }
+});
+</script>

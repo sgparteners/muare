@@ -1,0 +1,587 @@
+{% schema %}
+{
+  "name": "Historia de la Empresa",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Configuración del Título Principal"
+    },
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Título de la sección",
+      "default": "Nuestra Historia"
+    },
+    {
+      "type": "font_picker",
+      "id": "fuente_titulo",
+      "label": "Fuente del título",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "tamano_titulo",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Tamaño del título",
+      "default": 48
+    },
+    {
+      "type": "select",
+      "id": "peso_titulo",
+      "label": "Peso de la fuente del título",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "header",
+      "content": "Configuración de Subtítulos"
+    },
+    {
+      "type": "font_picker",
+      "id": "fuente_subtitulos",
+      "label": "Fuente de subtítulos",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "tamano_subtitulos",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de subtítulos",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "peso_subtitulos",
+      "label": "Peso de los subtítulos",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Configuración del Texto General"
+    },
+    {
+      "type": "font_picker",
+      "id": "fuente_texto",
+      "label": "Fuente del texto general",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "tamano_texto",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño del texto",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "peso_texto",
+      "label": "Peso del texto general",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Configuración de Fechas"
+    },
+    {
+      "type": "font_picker",
+      "id": "fuente_fechas",
+      "label": "Fuente de las fechas",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "tamano_fechas",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Tamaño de las fechas",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "peso_fechas",
+      "label": "Peso de las fechas",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Configuración de Colores"
+    },
+    {
+      "type": "color",
+      "id": "color_fondo",
+      "label": "Color de fondo",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "color_texto",
+      "label": "Color del texto general",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "color_titulo",
+      "label": "Color del título",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "color_subtitulos",
+      "label": "Color de subtítulos",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "color_linea_tiempo",
+      "label": "Color de la línea de tiempo",
+      "default": "#FF9F55"
+    },
+    {
+      "type": "color",
+      "id": "color_evento",
+      "label": "Color de fondo del evento",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "texto",
+      "name": "Bloque de texto",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitulo",
+          "label": "Subtítulo",
+          "default": "Nuestros inicios"
+        },
+        {
+          "type": "richtext",
+          "id": "contenido",
+          "label": "Contenido",
+          "default": "<p>Aquí va el contenido detallado de esta parte de la historia.</p>"
+        },
+        {
+          "type": "text",
+          "id": "fecha",
+          "label": "Fecha",
+          "default": "2023"
+        }
+      ]
+    },
+    {
+      "type": "imagen",
+      "name": "Imagen",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "imagen",
+          "label": "Seleccionar imagen"
+        },
+        {
+          "type": "text",
+          "id": "descripcion",
+          "label": "Descripción de la imagen",
+          "default": "Descripción de la imagen"
+        },
+        {
+          "type": "text",
+          "id": "fecha",
+          "label": "Fecha",
+          "default": "2023"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "video_url",
+          "id": "video_url",
+          "label": "URL del video",
+          "accept": ["youtube", "vimeo"]
+        },
+        {
+          "type": "text",
+          "id": "descripcion_video",
+          "label": "Descripción del video",
+          "default": "Descripción del video"
+        },
+        {
+          "type": "text",
+          "id": "fecha",
+          "label": "Fecha",
+          "default": "2023"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Historia de la Empresa",
+      "category": "Contenido"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="historia-empresa" style="
+  background-color: {{ section.settings.color_fondo }}; 
+  color: {{ section.settings.color_texto }};
+  font-family: {{ section.settings.fuente_texto.family }}, {{ section.settings.fuente_texto.fallback_families }};
+  font-size: {{ section.settings.tamano_texto }}px;
+  font-weight: {{ section.settings.peso_texto }};
+">
+  <div class="contenedor">
+    <h1 class="titulo" style="
+      font-family: {{ section.settings.fuente_titulo.family }}, {{ section.settings.fuente_titulo.fallback_families }};
+      font-size: {{ section.settings.tamano_titulo }}px;
+      font-weight: {{ section.settings.peso_titulo }};
+      color: {{ section.settings.color_titulo }};
+    ">{{ section.settings.titulo }}</h1>
+    
+    <div class="introduccion">
+      {{ section.settings.introduccion }}
+    </div>
+
+    <div class="timeline" style="--color-linea-tiempo: {{ section.settings.color_linea_tiempo }}; --color-evento: {{ section.settings.color_evento }};">
+      {% for block in section.blocks %}
+        <div class="evento {% cycle 'izquierda', 'derecha' %}">
+          <div class="fecha" style="
+            font-family: {{ section.settings.fuente_fechas.family }}, {{ section.settings.fuente_fechas.fallback_families }};
+            font-size: {{ section.settings.tamano_fechas }}px;
+            font-weight: {{ section.settings.peso_fechas }};
+          ">{{ block.settings.fecha }}</div>
+          
+          <div class="contenido-evento">
+            {% case block.type %}
+              {% when 'texto' %}
+                <h2 style="
+                  font-family: {{ section.settings.fuente_subtitulos.family }}, {{ section.settings.fuente_subtitulos.fallback_families }};
+                  font-size: {{ section.settings.tamano_subtitulos }}px;
+                  font-weight: {{ section.settings.peso_subtitulos }};
+                  color: {{ section.settings.color_subtitulos }};
+                ">{{ block.settings.subtitulo }}</h2>
+                <div class="texto">
+                  {{ block.settings.contenido }}
+                </div>
+              {% when 'imagen' %}
+                {% if block.settings.imagen %}
+                  <div class="imagen-container">
+                    <img src="{{ block.settings.imagen | img_url: 'master' }}" alt="{{ block.settings.descripcion }}" loading="lazy">
+                  </div>
+                  <p class="descripcion">{{ block.settings.descripcion }}</p>
+                {% endif %}
+              {% when 'video' %}
+                {% if block.settings.video_url %}
+                  <div class="video-container">
+                    {% if block.settings.video_url.type == "youtube" %}
+                      <iframe src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}" frameborder="0" allowfullscreen loading="lazy"></iframe>
+                    {% elsif block.settings.video_url.type == "vimeo" %}
+                      <iframe src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}" frameborder="0" allowfullscreen loading="lazy"></iframe>
+                    {% endif %}
+                  </div>
+                  <p class="descripcion">{{ block.settings.descripcion_video }}</p>
+                {% endif %}
+            {% endcase %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.historia-empresa {
+  padding: 6rem 0;
+}
+
+.contenedor {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.titulo {
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+}
+
+.introduccion {
+  text-align: center;
+  margin-bottom: 4rem;
+  opacity: 0.8;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: var(--color-linea-tiempo);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1px;
+  opacity: 0.7;
+}
+
+.evento {
+  padding: 10px 40px;
+  position: relative;
+  background-color: inherit;
+  width: 50%;
+  box-sizing: border-box;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.evento::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  background-color: var(--color-evento);
+  border: 4px solid var(--color-linea-tiempo);
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 0 4px rgba(255,159,85,0.2);
+}
+
+.evento.derecha {
+  left: 50%;
+}
+
+.evento.izquierda::after {
+  left: -10px;
+}
+
+.evento h2 {
+  margin-bottom: 0.5rem;
+}
+
+.contenido-evento {
+  padding: 30px;
+  background-color: var(--color-evento);
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contenido-evento:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.fecha {
+  position: absolute;
+  top: 0;
+  background-color: var(--color-linea-tiempo);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.evento.izquierda .fecha {
+  right: -20px;
+}
+
+.evento.derecha .fecha {
+  left: -20px;
+}
+
+.imagen-container, .video-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.imagen-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.imagen-container:hover img {
+  transform: scale(1.05);
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.descripcion {
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .timeline::before {
+    left: 31px;
+  }
+  
+  .evento {
+    width: 100%;
+    padding-left: 70px;
+    padding-right: 25px;
+  }
+  
+  .evento.derecha {
+    left: 0%;
+  }
+  
+  .evento::after {
+    left: 21px;
+  }
+  
+  .evento.izquierda::after {
+    left: 21px;
+  }
+  
+  .fecha {
+    left: -20px !important;
+    right: auto !important;
+  }
+
+  .titulo {
+    font-size: calc({{ section.settings.tamano_titulo }}px * 0.7) !important;
+  }
+}
+</style>
+
+{% javascript %}
+document.addEventListener('DOMContentLoaded', (event) => {
+  const eventos = document.querySelectorAll('.evento');
+  
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+  
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = 'translateY(0)';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  eventos.forEach(evento => {
+    observer.observe(evento);
+  });
+});
+{% endjavascript %}

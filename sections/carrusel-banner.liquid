@@ -1,0 +1,160 @@
+{% schema %}
+{
+  "name": "Carrusel de Colección",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección"
+    },
+    {
+      "type": "select",
+      "id": "image_shape",
+      "label": "Forma de la imagen",
+      "default": "square",
+      "options": [
+        {
+          "value": "square",
+          "label": "Cuadrado"
+        },
+        {
+          "value": "round",
+          "label": "Redondo"
+        },
+        {
+          "value": "oval",
+          "label": "Ovalado"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "image_width",
+      "label": "Ancho de la imagen (px o %)",
+      "default": "150px"
+    },
+    {
+      "type": "text",
+      "id": "image_height",
+      "label": "Alto de la imagen (px o %)",
+      "default": "150px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Carrusel de Colección"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="carousel-container">
+  <div class="carousel">
+    {% if section.settings.collection %}
+      {% assign collection_handle = section.settings.collection %}
+      {% assign collection = collections[collection_handle] %}
+      {% for product in collection.products %}
+        {% if product.featured_image %}
+          <div class="carousel-slide" style="min-width: {{ section.settings.image_width }}; height: {{ section.settings.image_height }};">
+            <a href="{{ product.url }}" title="Ver {{ product.title }}">
+              <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title }}" class="carousel-image {{ section.settings.image_shape }}">
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+      <!-- Duplicar las imágenes para crear un bucle infinito -->
+      {% for product in collection.products %}
+        {% if product.featured_image %}
+          <div class="carousel-slide" style="min-width: {{ section.settings.image_width }}; height: {{ section.settings.image_height }};">
+            <a href="{{ product.url }}" title="Ver {{ product.title }}">
+              <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title }}" class="carousel-image {{ section.settings.image_shape }}">
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      <p>No hay ninguna colección seleccionada.</p>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .carousel-container {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin: auto;
+  }
+
+  .carousel {
+    display: flex;
+    flex-wrap: nowrap;
+    transition: transform 0.1s linear;
+    will-change: transform;
+  }
+
+  .carousel-slide {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .carousel-slide a {
+    display: block;
+    text-decoration: none;
+  }
+
+  .carousel-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: border-radius 0.3s ease-in-out, border 0.3s ease-in-out;
+    border: 3px solid #000; /* Color y grosor del marco */
+  }
+
+  /* Formas de las imágenes */
+  .carousel-image.square {
+    border-radius: 0;
+  }
+
+  .carousel-image.round {
+    border-radius: 50%;
+  }
+
+  .carousel-image.oval {
+    border-radius: 50% / 25%;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const carousel = document.querySelector('.carousel');
+    let slides = Array.from(document.querySelectorAll('.carousel-slide'));
+    let currentPosition = 0;
+    const speed = 1; // Velocidad de desplazamiento en px por frame
+
+    // Duplicar el contenido del carrusel para que parezca infinito
+    carousel.innerHTML += carousel.innerHTML;
+    slides = Array.from(document.querySelectorAll('.carousel-slide')); // Actualizar slides después de duplicar
+
+    // Función para el desplazamiento continuo
+    function moveCarousel() {
+      currentPosition -= speed;
+      carousel.style.transform = `translateX(${currentPosition}px)`;
+
+      // Si el desplazamiento excede la mitad del carrusel, resetea la posición
+      if (Math.abs(currentPosition) >= carousel.scrollWidth / 2) {
+        currentPosition = 0;
+      }
+
+      requestAnimationFrame(moveCarousel);
+    }
+
+    // Iniciar el desplazamiento continuo
+    moveCarousel();
+  });
+</script>
+

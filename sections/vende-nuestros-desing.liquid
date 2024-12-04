@@ -1,0 +1,472 @@
+{% style %}
+.formulario-contacto {
+  padding: 4rem 1rem;
+  background-color: {{ section.settings.background_color }};
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formulario-contacto__container {
+  max-width: 42rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.formulario-contacto__card {
+  background: {{ section.settings.card_background }};
+  border-radius: 1rem;
+  padding: 2.5rem;
+  box-shadow: 0 4px 6px {{ section.settings.shadow_color }};
+}
+
+.formulario-contacto__title {
+  color: {{ section.settings.title_color }};
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-grid--2-cols {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .form-grid--2-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: {{ section.settings.label_color }};
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid {{ section.settings.input_border }};
+  border-radius: 0.5rem;
+  background: {{ section.settings.input_background }};
+  color: {{ section.settings.input_text }};
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: {{ section.settings.input_placeholder }};
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: {{ section.settings.input_focus_border }};
+  background: {{ section.settings.input_focus_background }};
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 1rem;
+  background: {{ section.settings.button_background }};
+  color: {{ section.settings.button_text }};
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-submit:hover {
+  background: {{ section.settings.button_hover_background }};
+  transform: translateY(-1px);
+}
+
+.form-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.form-message--success {
+  background: {{ section.settings.success_background }};
+  color: {{ section.settings.success_text }};
+  border: 1px solid {{ section.settings.success_border }};
+}
+
+.form-message--error {
+  background: {{ section.settings.error_background }};
+  color: {{ section.settings.error_text }};
+  border: 1px solid {{ section.settings.error_border }};
+}
+{% endstyle %}
+
+<div class="formulario-contacto">
+  <div class="formulario-contacto__container">
+    <div class="formulario-contacto__card">
+      <h2 class="formulario-contacto__title">{{ section.settings.title }}</h2>
+      
+      {%- form 'contact', id: 'ContactForm', class: 'form-grid' -%}
+        <div class="form-grid--2-cols">
+          <div class="form-group">
+            <label class="form-label" for="ContactForm-name">{{ section.settings.nombre_label }}</label>
+            <input
+              type="text"
+              id="ContactForm-name"
+              name="contact[name]"
+              class="form-input"
+              value="{{ form.name }}"
+              placeholder="{{ section.settings.nombre_placeholder }}"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="ContactForm-apellido">{{ section.settings.apellido_label }}</label>
+            <input
+              type="text"
+              id="ContactForm-apellido"
+              name="contact[apellido]"
+              class="form-input"
+              value="{{ form.apellido }}"
+              placeholder="{{ section.settings.apellido_placeholder }}"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ContactForm-email">{{ section.settings.email_label }}</label>
+          <input
+            type="email"
+            id="ContactForm-email"
+            name="contact[email]"
+            class="form-input"
+            value="{{ form.email }}"
+            placeholder="{{ section.settings.email_placeholder }}"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ContactForm-empresa">{{ section.settings.empresa_label }}</label>
+          <input
+            type="text"
+            id="ContactForm-empresa"
+            name="contact[empresa]"
+            class="form-input"
+            value="{{ form.empresa }}"
+            placeholder="{{ section.settings.empresa_placeholder }}"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ContactForm-phone">{{ section.settings.telefono_label }}</label>
+          <input
+            type="tel"
+            id="ContactForm-phone"
+            name="contact[phone]"
+            class="form-input"
+            value="{{ form.phone }}"
+            placeholder="{{ section.settings.telefono_placeholder }}"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ContactForm-direccion">{{ section.settings.direccion_label }}</label>
+          <input
+            type="text"
+            id="ContactForm-direccion"
+            name="contact[direccion]"
+            class="form-input"
+            value="{{ form.direccion }}"
+            placeholder="{{ section.settings.direccion_placeholder }}"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ContactForm-body">{{ section.settings.necesidad_label }}</label>
+          <textarea
+            id="ContactForm-body"
+            name="contact[body]"
+            class="form-input form-textarea"
+            placeholder="{{ section.settings.necesidad_placeholder }}"
+            required
+            rows="4"
+          >{{ form.body }}</textarea>
+        </div>
+
+        <button type="submit" class="form-submit">
+          {{ section.settings.submit_text }}
+        </button>
+
+        {%- if form.posted_successfully? -%}
+          <div class="form-message form-message--success">
+            {{ section.settings.success_message }}
+          </div>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <div class="form-message form-message--error">
+            {{ section.settings.error_message }}
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Formulario de Contacto",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título del formulario",
+      "default": "¿Cómo podemos ayudarte?"
+    },
+    {
+      "type": "text",
+      "id": "nombre_label",
+      "label": "Etiqueta campo nombre",
+      "default": "Nombre"
+    },
+    {
+      "type": "text",
+      "id": "nombre_placeholder",
+      "label": "Placeholder nombre",
+      "default": "Tu nombre"
+    },
+    {
+      "type": "text",
+      "id": "apellido_label",
+      "label": "Etiqueta campo apellido",
+      "default": "Apellido"
+    },
+    {
+      "type": "text",
+      "id": "apellido_placeholder",
+      "label": "Placeholder apellido",
+      "default": "Tu apellido"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Etiqueta campo email",
+      "default": "Correo electrónico"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Placeholder email",
+      "default": "tu@email.com"
+    },
+    {
+      "type": "text",
+      "id": "empresa_label",
+      "label": "Etiqueta campo empresa",
+      "default": "Empresa (Opcional)"
+    },
+    {
+      "type": "text",
+      "id": "empresa_placeholder",
+      "label": "Placeholder empresa",
+      "default": "Nombre de tu empresa"
+    },
+    {
+      "type": "text",
+      "id": "telefono_label",
+      "label": "Etiqueta campo teléfono",
+      "default": "Teléfono"
+    },
+    {
+      "type": "text",
+      "id": "telefono_placeholder",
+      "label": "Placeholder teléfono",
+      "default": "+34 600 000 000"
+    },
+    {
+      "type": "text",
+      "id": "direccion_label",
+      "label": "Etiqueta campo dirección",
+      "default": "Dirección"
+    },
+    {
+      "type": "text",
+      "id": "direccion_placeholder",
+      "label": "Placeholder dirección",
+      "default": "Tu dirección completa"
+    },
+    {
+      "type": "text",
+      "id": "necesidad_label",
+      "label": "Etiqueta campo necesidad",
+      "default": "¿Qué necesitas?"
+    },
+    {
+      "type": "text",
+      "id": "necesidad_placeholder",
+      "label": "Placeholder necesidad",
+      "default": "Cuéntanos brevemente qué necesitas..."
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Texto del botón enviar",
+      "default": "Enviar Solicitud"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Mensaje de éxito",
+      "default": "¡Gracias por tu mensaje! Te contactaremos pronto."
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Mensaje de error",
+      "default": "Por favor verifica los campos e intenta de nuevo."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#F7F7F7"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Color de fondo tarjeta",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color de etiquetas",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Color fondo input",
+      "default": "#F7F7F7"
+    },
+    {
+      "type": "color",
+      "id": "input_border",
+      "label": "Color borde input",
+      "default": "#E5E7EB"
+    },
+    {
+      "type": "color",
+      "id": "input_text",
+      "label": "Color texto input",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder",
+      "label": "Color placeholder",
+      "default": "#9CA3AF"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border",
+      "label": "Color borde input focus",
+      "default": "#3B82F6"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Color fondo botón",
+      "default": "#3B82F6"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Color texto botón",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Color fondo botón hover",
+      "default": "#2563EB"
+    },
+    {
+      "type": "color",
+      "id": "success_background",
+      "label": "Color fondo mensaje éxito",
+      "default": "#F0FDF4"
+    },
+    {
+      "type": "color",
+      "id": "success_text",
+      "label": "Color texto mensaje éxito",
+      "default": "#16A34A"
+    },
+    {
+      "type": "color",
+      "id": "success_border",
+      "label": "Color borde mensaje éxito",
+      "default": "#16A34A"
+    },
+    {
+      "type": "color",
+      "id": "error_background",
+      "label": "Color fondo mensaje error",
+      "default": "#FEF2F2"
+    },
+    {
+      "type": "color",
+      "id": "error_text",
+      "label": "Color texto mensaje error",
+      "default": "#DC2626"
+    },
+    {
+      "type": "color",
+      "id": "error_border",
+      "label": "Color borde mensaje error",
+      "default": "#DC2626"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Formulario de Contacto",
+      "category": "Formularios"
+    }
+  ]
+}
+{% endschema %}

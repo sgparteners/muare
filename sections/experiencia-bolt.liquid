@@ -1,0 +1,208 @@
+{% comment %}
+  Sección de Experiencia para Tema Shopify
+  Versión: 1.1.0
+  Descripción: Sección que muestra la experiencia de la tienda en un diseño de cuadrícula con imágenes o emojis
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Sección de Experiencia",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título de la sección",
+      "default": "Nuestra Experiencia"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del título",
+      "default": "#2c3e50"
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Color de fondo del ítem",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_title_color",
+      "label": "Color del título del ítem",
+      "default": "#3498db"
+    },
+    {
+      "type": "color",
+      "id": "item_text_color",
+      "label": "Color del texto del ítem",
+      "default": "#7f8c8d"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "experience_item",
+      "name": "Ítem de Experiencia",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icono (emoji) - Se usa si no se selecciona imagen",
+          "default": "🛍️"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Título",
+          "default": "Comercio Electrónico"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Descripción",
+          "default": "10+ años de experiencia en ventas online"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sección de Experiencia",
+      "blocks": [
+        {
+          "type": "experience_item"
+        },
+        {
+          "type": "experience_item"
+        },
+        {
+          "type": "experience_item"
+        },
+        {
+          "type": "experience_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .experience-section {
+    background-color: {{ section.settings.background_color }};
+    padding: 4rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  }
+
+  .experience-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .experience-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: {{ section.settings.title_color }};
+    font-weight: bold;
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .experience-item {
+    background-color: {{ section.settings.item_background }};
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .experience-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .experience-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .experience-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+
+  .experience-item-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: {{ section.settings.item_title_color }};
+    font-weight: 600;
+  }
+
+  .experience-item-description {
+    font-size: 1rem;
+    color: {{ section.settings.item_text_color }};
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .experience-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .experience-title {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<section class="experience-section">
+  <div class="experience-container">
+    <h2 class="experience-title">{{ section.settings.title }}</h2>
+    <div class="experience-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'experience_item' %}
+          <div class="experience-item">
+            {% if block.settings.image %}
+              {{ block.settings.image | image_url: width: 160 | image_tag: class: 'experience-image', loading: 'lazy', alt: block.settings.title }}
+            {% else %}
+              <div class="experience-icon">{{ block.settings.icon }}</div>
+            {% endif %}
+            <h3 class="experience-item-title">{{ block.settings.title }}</h3>
+            <p class="experience-item-description">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% comment %}
+  Instrucciones de uso:
+  1. Copia este archivo completo en la carpeta 'sections' de tu tema de Shopify.
+  2. Nombra el archivo como 'experience-section.liquid'.
+  3. En el editor de temas de Shopify, añade esta sección a la página deseada.
+  4. Personaliza los colores, títulos y contenido desde el editor de temas.
+  5. Añade o quita ítems de experiencia según sea necesario.
+  6. Para cada ítem, puedes elegir una imagen o usar un emoji como respaldo.
+{% endcomment %}
