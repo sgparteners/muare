@@ -1,0 +1,27 @@
+<div class="quantity-selector">
+  <label for="Quantity" class="block text-sm font-medium text-gray-700">
+    Metros 
+  </label>
+  <div class="mt-2">
+    <div class="inline-flex items-center rounded-lg border border-gray-300 shadow-sm">
+      <button 
+        type="button"
+        class="quantity-btn w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-l-lg"
+        data-action="decrease"
+      >−</button>
+      <input 
+        type="number"
+        id="Quantity"
+        name="quantity"
+        value="1"
+        min="1"
+        class="w-16 h-10 text-center border-x border-gray-300 focus:ring-0 focus:outline-none"
+      >
+      <button 
+        type="button"
+        class="quantity-btn w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-r-lg"
+        data-action="increase"
+      >+</button>
+    </div>
+  </div>
+</div>

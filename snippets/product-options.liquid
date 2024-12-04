@@ -1,0 +1,39 @@
+{% if has_size %}
+  <div class="variant-group">
+    <label for="SizeSelect" class="block text-sm font-medium text-gray-700">
+      {{ size_option.name }}
+    </label>
+    <div class="mt-2">
+      <select
+        id="SizeSelect"
+        name="options[{{ size_option.name }}]"
+        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-black focus:ring-black"
+        required
+      >
+        <option value="">Seleccionar talla</option>
+        {% for value in size_option.values %}
+          <option value="{{ value }}">{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+{% endif %}
+
+{% if has_quality %}
+  <div class="variant-group hidden" id="QualityWrapper">
+    <label for="QualitySelect" class="block text-sm font-medium text-gray-700">
+      {{ quality_option.name }}
+    </label>
+    <div class="mt-2">
+      <select
+        id="QualitySelect"
+        name="options[{{ quality_option.name }}]"
+        class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-black focus:ring-black"
+        required
+        disabled
+      >
+        <option value="">Seleccionar calidad</option>
+      </select>
+    </div>
+  </div>
+{% endif %}

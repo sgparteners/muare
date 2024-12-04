@@ -1,0 +1,45 @@
+{% assign has_size = false %}
+{% assign has_quality = false %}
+
+{% for option in product.options_with_values %}
+  {% if option.name == 'Size' or option.name == 'Talla' %}
+    {% assign has_size = true %}
+    {% assign size_option = option %}
+  {% endif %}
+  {% if option.name == 'Quality' or option.name == 'Calidad' %}
+    {% assign has_quality = true %}
+    {% assign quality_option = option %}
+  {% endif %}
+{% endfor %}
+
+<div class="product-info lg:max-w-xl">
+  {%- render 'product-header' with product: product, current_variant: current_variant -%}
+
+  {% form 'product', product %}
+    <input type="hidden" name="id" id="VariantId" value="{{ current_variant.id }}">
+
+    <div class="variant-selectors space-y-6" data-product="{{ product | json | escape }}">
+      {%- render 'product-options' with 
+        size_option: size_option,
+        quality_option: quality_option,
+        has_size: has_size,
+        has_quality: has_quality 
+      -%}
+      
+      {%- render 'product-quantity' -%}
+
+      <button 
+        type="submit"
+        id="AddToCart"
+        class="w-full bg-black text-white py-3 px-6 rounded-lg hover:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200"
+        disabled
+      >
+        <span class="text-base font-medium">Selecciona una talla</span>
+      </button>
+    </div>
+  {% endform %}
+
+  {%- render 'product-description' with product: product -%}
+</div>
+
+{% render 'product-scripts' %}

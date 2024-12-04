@@ -1,0 +1,323 @@
+{% assign has_size = false %}
+{% assign has_quality = false %}
+
+{% for option in product.options_with_values %}
+  {% if option.name == 'Size' or option.name == 'Talla' %}
+    {% assign has_size = true %}
+    {% assign size_option = option %}
+  {% endif %}
+  {% if option.name == 'Quality' or option.name == 'Calidad' %}
+    {% assign has_quality = true %}
+    {% assign quality_option = option %}
+  {% endif %}
+{% endfor %}
+
+<div class="product-info">
+  <h1 class="text-3xl font-bold mb-4">{{ product.title }}</h1>
+  
+  <div class="price-container mb-6">
+    <span class="text-2xl font-semibold" id="ProductPrice">
+      {{ current_variant.price | money }}
+    </span>
+  </div>
+
+  {% form 'product', product, class: 'space-y-6' %}
+    <input type="hidden" name="id" id="VariantId" value="{{ current_variant.id }}">
+    
+    <div class="variants-container space-y-4" data-product-json="{{ product | json | escape }}">
+      {% if has_size %}
+        <div class="variant-group">
+          <label for="SizeSelect" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ size_option.name }}
+          </label>
+          <select 
+            id="SizeSelect"
+            name="options[{{ size_option.name }}]"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-black"
+            required
+          >
+            <option value="">Selecciona una talla</option>
+            {% for value in size_option.values %}
+              <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+
+      {% if has_quality %}
+        <div class="variant-group hidden" id="QualityWrapper">
+          <label for="QualitySelect" class="block text-sm font-medium text-gray-700 mb-2">
+            {{ quality_option.name }}
+          </label>
+          <select 
+            id="QualitySelect"
+            name="options[{{ quality_option.name }}]"
+            class="w-full p-2 border rounded focus:ring-2 focus:ring-black"
+            required
+            disabled
+          >
+            <option value="">Selecciona una calidad</option>
+          </select>
+        </div>
+      {% endif %}
+
+      <div class="quantity-selector">
+        <label for="Quantity" class="block text-sm font-medium text-gray-700 mb-2">
+         Metros
+        </label>
+        <div class="inline-flex border rounded">
+          <button 
+            type="button"
+            class="quantity-btn px-4 py-2 bg-gray-100 hover:bg-gray-200"
+            data-action="decrease"
+          >-</button>
+          <input 
+            type="number"
+            id="Quantity"
+            name="quantity"
+            value="1"
+            min="1"
+            class="w-16 text-center border-x"
+          >
+          <button 
+            type="button"
+            class="quantity-btn px-4 py-2 bg-gray-100 hover:bg-gray-200"
+            data-action="increase"
+          >+</button>
+        </div>
+      </div>
+
+      <button 
+        type="submit"
+        id="AddToCart"
+        class="w-full bg-black text-white py-3 px-6 rounded hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+        disabled
+      >
+        <span>Selecciona una talla</span>
+      </button>
+    </div>
+  {% endform %}
+
+  {% if product.description != blank %}
+    <div class="product-description mt-8 prose">
+      {{ product.description }}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+class ProductVariantSelector {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    this.container = document.querySelector('.variants-container');
+    if (!this.container) return;
+
+    try {
+      const productData = JSON.parse(this.container.dataset.productJson);
+      this.variants = productData.variants;
+      this.setupElements();
+      this.setupEventListeners();
+    } catch (error) {
+      console.error('Error initializing variant selector:', error);
+    }
+  }
+
+  setupElements() {
+    this.elements = {
+      sizeSelect: document.getElementById('SizeSelect'),
+      qualitySelect: document.getElementById('QualitySelect'),
+      qualityWrapper: document.getElementById('QualityWrapper'),
+      addToCartButton: document.getElementById('AddToCart'),
+      variantIdInput: document.getElementById('VariantId'),
+      priceElement: document.getElementById('ProductPrice'),
+      productImage: document.getElementById('ProductImage'),
+      quantityInput: document.getElementById('Quantity'),
+      quantityBtns: document.querySelectorAll('.quantity-btn')
+    };
+  }
+
+  setupEventListeners() {
+    if (this.elements.sizeSelect) {
+      this.elements.sizeSelect.addEventListener('change', () => this.handleSizeChange());
+    }
+
+    if (this.elements.qualitySelect) {
+      this.elements.qualitySelect.addEventListener('change', () => this.handleQualityChange());
+    }
+
+    this.elements.quantityBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => this.handleQuantityChange(e));
+    });
+
+    const thumbnailBtns = document.querySelectorAll('.thumbnail-btn');
+    thumbnailBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => this.handleThumbnailClick(e));
+    });
+  }
+
+  handleSizeChange() {
+    const selectedSize = this.elements.sizeSelect.value;
+    
+    if (!selectedSize) {
+      this.hideQualitySelector();
+      this.updateAddToCartButton('Selecciona una talla', true);
+      return;
+    }
+
+    const availableVariants = this.getAvailableVariantsForSize(selectedSize);
+    
+    if (availableVariants.length > 0) {
+      this.updateQualityOptions(availableVariants);
+      this.showQualitySelector();
+      this.updateAddToCartButton('Selecciona una calidad', true);
+    } else {
+      this.hideQualitySelector();
+      this.updateAddToCartButton('Talla agotada', true);
+    }
+  }
+
+  getAvailableVariantsForSize(size) {
+    return this.variants.filter(variant => 
+      variant.option1 === size && 
+      variant.available
+    );
+  }
+
+  handleQualityChange() {
+    const selectedSize = this.elements.sizeSelect.value;
+    const selectedQuality = this.elements.qualitySelect.value;
+
+    if (!selectedQuality) {
+      this.updateAddToCartButton('Selecciona una calidad', true);
+      return;
+    }
+
+    const selectedVariant = this.findVariant(selectedSize, selectedQuality);
+    if (selectedVariant) {
+      this.updateVariant(selectedVariant);
+    }
+  }
+
+  findVariant(size, quality) {
+    return this.variants.find(variant => 
+      variant.option1 === size && 
+      variant.option2 === quality
+    );
+  }
+
+  updateQualityOptions(variants) {
+    if (!this.elements.qualitySelect) return;
+
+    const qualities = [...new Set(variants.map(v => v.option2))].filter(Boolean);
+    
+    this.elements.qualitySelect.innerHTML = `
+      <option value="">Selecciona una calidad</option>
+      ${qualities.map(quality => `
+        <option value="${quality}">${quality}</option>
+      `).join('')}
+    `;
+  }
+
+  showQualitySelector() {
+    if (this.elements.qualityWrapper && this.elements.qualitySelect) {
+      this.elements.qualityWrapper.classList.remove('hidden');
+      this.elements.qualitySelect.disabled = false;
+    }
+  }
+
+  hideQualitySelector() {
+    if (this.elements.qualityWrapper && this.elements.qualitySelect) {
+      this.elements.qualityWrapper.classList.add('hidden');
+      this.elements.qualitySelect.disabled = true;
+    }
+  }
+
+  updateVariant(variant) {
+    this.elements.variantIdInput.value = variant.id;
+    this.updatePrice(variant.price);
+    this.updateImage(variant);
+    this.updateUrl(variant.id);
+    this.updateAddToCartButton(
+      variant.available ? 'Agregar al carrito' : 'Agotado',
+      !variant.available
+    );
+  }
+
+  updatePrice(price) {
+    this.elements.priceElement.innerHTML = this.formatMoney(price);
+  }
+
+  updateImage(variant) {
+    if (variant.featured_image && this.elements.productImage) {
+      this.elements.productImage.style.opacity = '0';
+      setTimeout(() => {
+        this.elements.productImage.src = variant.featured_image.src;
+        this.elements.productImage.style.opacity = '1';
+      }, 200);
+    }
+  }
+
+  updateUrl(variantId) {
+    if (window.history && window.history.replaceState) {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set('variant', variantId);
+      window.history.replaceState({}, '', newUrl.toString());
+    }
+  }
+
+  updateAddToCartButton(text, disabled = false) {
+    const button = this.elements.addToCartButton;
+    if (!button) return;
+
+    button.disabled = disabled;
+    button.querySelector('span').textContent = text;
+  }
+
+  handleQuantityChange(event) {
+    const action = event.currentTarget.dataset.action;
+    const input = this.elements.quantityInput;
+    const currentValue = parseInt(input.value);
+
+    if (action === 'decrease' && currentValue > 1) {
+      input.value = currentValue - 1;
+    } else if (action === 'increase') {
+      input.value = currentValue + 1;
+    }
+  }
+
+  handleThumbnailClick(event) {
+    const button = event.currentTarget;
+    const newImageUrl = button.dataset.imageUrl;
+    
+    document.querySelectorAll('.thumbnail-btn').forEach(btn => {
+      btn.classList.remove('border-black');
+      btn.classList.add('border-transparent');
+    });
+    
+    button.classList.remove('border-transparent');
+    button.classList.add('border-black');
+    
+    if (this.elements.productImage && newImageUrl) {
+      this.elements.productImage.style.opacity = '0';
+      setTimeout(() => {
+        this.elements.productImage.src = newImageUrl;
+        this.elements.productImage.style.opacity = '1';
+      }, 200);
+    }
+  }
+
+  formatMoney(cents) {
+    return (cents/100).toLocaleString('es-ES', {
+      style: 'currency',
+      currency: 'EUR'
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  new ProductVariantSelector();
+});
+</script>

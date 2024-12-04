@@ -1,0 +1,46 @@
+{% style %}
+.quick-view-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-view-modal.active {
+  display: flex;
+}
+
+.quick-view-modal__content {
+  background: white;
+  padding: 40px;
+  max-width: 1000px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border-radius: 8px;
+}
+
+.quick-view-modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 5px;
+}
+{% endstyle %}
+
+<div class="quick-view-modal" id="quickViewModal">
+  <div class="quick-view-modal__content">
+    <!-- Content will be loaded dynamically -->
+  </div>
+</div>

@@ -1,0 +1,8 @@
+{% if product.description != blank %}
+  <div class="mt-10 pt-6 border-t border-gray-200">
+    <h2 class="text-lg font-medium text-gray-900">Descripción del producto</h2>
+    <div class="mt-4 prose prose-sm text-gray-600">
+      {{ product.description }}
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,36 @@
+{% if product.featured_image %}
+  <div class="product-gallery">
+    <div class="sticky top-8">
+      <div class="aspect-w-1 aspect-h-1 bg-gray-50 rounded-xl overflow-hidden">
+        <img 
+          src="{{ current_variant.featured_image | default: product.featured_image | img_url: '600x' }}"
+          alt="{{ product.title }}"
+          id="ProductImage"
+          class="w-full h-full object-contain object-center transition-opacity duration-300"
+          loading="eager"
+        >
+      </div>
+      
+      {% if product.images.size > 1 %}
+        <div class="mt-4">
+          <div class="thumbnails-grid grid grid-cols-6 gap-2">
+            {% for image in product.images %}
+              <button 
+                type="button"
+                class="thumbnail-btn group aspect-w-1 aspect-h-1 rounded-lg overflow-hidden bg-gray-50 border-2 {% if forloop.first %}border-black{% else %}border-transparent{% endif %}"
+                data-image-url="{{ image | img_url: '600x' }}"
+              >
+                <img 
+                  src="{{ image | img_url: '100x' }}"
+                  alt="{{ image.alt | escape }}"
+                  class="w-full h-full object-cover object-center group-hover:opacity-75 transition-opacity"
+                  loading="lazy"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}

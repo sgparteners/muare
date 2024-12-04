@@ -1,0 +1,50 @@
+{% if block.settings.collections != blank %}
+  <div class="related-collections" {{ block.shopify_attributes }}>
+    <h2>{{ block.settings.title }}</h2>
+    <div class="related-collections__grid">
+      {% for collection in block.settings.collections %}
+        <a href="{{ collection.url }}" class="related-collection-link">
+          <div class="related-collection-image">
+            {% if collection.image %}
+              <img src="{{ collection.image | img_url: '300x300', crop: 'center' }}" alt="{{ collection.title | escape }}">
+            {% elsif collection.products.first and collection.products.first.featured_image %}
+              <img src="{{ collection.products.first.featured_image | img_url: '300x300', crop: 'center' }}" alt="{{ collection.title | escape }}">
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <style>
+    .related-collections__grid {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px 0;
+    }
+    .related-collections__grid::-webkit-scrollbar {
+      display: none;
+    }
+    .related-collections__grid {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .related-collection-link {
+      flex: 0 0 auto;
+    }
+    .related-collection-image {
+      width: {{ block.settings.image_size }}px;
+      height: {{ block.settings.image_size }}px;
+      overflow: hidden;
+    }
+    .related-collection-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+{% endif %}
